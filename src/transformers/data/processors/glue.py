@@ -169,13 +169,13 @@ def glue_convert_examples_to_features(
 class BoolqProcessor(DataProcessor):
 
     def get_example_from_tensor_dict(self, tensor_dict):
-    """See base class."""
-    return InputExample(
-        tensor_dict["idx"].numpy(),
-        tensor_dict["question"].numpy().decode("utf-8"),
-        tensor_dict["passage"].numpy().decode("utf-8"),
-        str(tensor_dict["label"].numpy()),
-    )
+        """See base class."""
+        return InputExample(
+            tensor_dict["idx"].numpy(),
+            tensor_dict["question"].numpy().decode("utf-8"),
+            tensor_dict["passage"].numpy().decode("utf-8"),
+            str(tensor_dict["label"].numpy()),
+        )
 
     def get_train_examples(self, data_dir):
         """See base class."""
