@@ -196,13 +196,12 @@ class BoolqProcessor(DataProcessor):
         examples = []
         for (i, line) in enumerate(lines):
 
-            j = json.loads(line)
+            line = json.loads(line[i])
 
-            guid = "%s-%s" % (set_type, i)
-            question = j["question"]
-            passage = j["passage"]
-            idx = j["idx"]
-            label = j["label"]
+            guid = "%s-%s" % (set_type, line['idx'])
+            question = line["question"]
+            passage = line["passage"]
+            label = line["label"]
             examples.append(InputExample(guid=guid, text_a=question, text_b=passage, label=label))
         return examples
 

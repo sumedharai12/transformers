@@ -32,6 +32,9 @@ if _has_sklearn:
     def simple_accuracy(preds, labels):
         return (preds == labels).mean()
 
+    def simple_accuracy_boolq(preds, labels):
+        return (preds == labels)/len(labels)
+
     def acc_and_f1(preds, labels):
         acc = simple_accuracy(preds, labels)
         f1 = f1_score(y_true=labels, y_pred=preds)
@@ -74,6 +77,8 @@ if _has_sklearn:
             return {"acc": simple_accuracy(preds, labels)}
         elif task_name == "hans":
             return {"acc": simple_accuracy(preds, labels)}
+        elif task_name == "boolq":
+            return {"acc": simple_accuracy_boolq(preds, labels)}
         else:
             raise KeyError(task_name)
 
