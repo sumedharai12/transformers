@@ -91,7 +91,7 @@ def glue_convert_examples_to_features(
         if ex_index % 10000 == 0:
             logger.info("Writing example %d/%d" % (ex_index, len_examples))
 
-        inputs = tokenizer.encode_plus(example.text_a, example.text_b, add_special_tokens=True, max_length=max_length,)
+        inputs = tokenizer.encode_plus(example.text_a, example.text_b, add_special_tokens=True, max_length=max_length, return_token_type_ids=True)
         input_ids, token_type_ids = inputs["input_ids"], inputs["token_type_ids"]
 
         # The mask has 1 for real tokens and 0 for padding tokens. Only real
@@ -173,19 +173,19 @@ class BoolqProcessor(DataProcessor):
         """See base class."""
         return InputExample(
             tensor_dict["idx"].numpy(),
-            tensor_dict["question"].numpy().decode("utf-8"),
-            tensor_dict["passage"].numpy().decode("utf-8"),
+            tensor_dict["sentence1"].numpy().decode("utf-8"),
+            tensor_dict["sentence2"].numpy().decode("utf-8"),
             str(tensor_dict["label"].numpy()),
         )
 
     def get_train_examples(self, data_dir):
         """See base class."""
         logger.info("LOOKING AT {}".format(os.path.join(data_dir, "train.jsonl")))
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "train.jsonl")), "train")
+        return self._create_examples(self._read_jsonl_format(os.path.join(data_dir, "train.jsonl")), "train")
 
     def get_dev_examples(self, data_dir):
         """See base class."""
-        return self._create_examples(self._read_tsv(os.path.join(data_dir, "val.jsonl")), "dev")
+        return self._create_examples(self._read_jsonl_format(os.path.join(data_dir, "val.jsonl")), "dev")
 
     def get_labels(self):
         """See base class."""
@@ -195,14 +195,11 @@ class BoolqProcessor(DataProcessor):
         """Creates examples for the training and dev sets."""
         examples = []
         for (i, line) in enumerate(lines):
-
-            line = json.loads(line[0])
-
-            guid = "%s-%s" % (set_type, line['idx'])
-            question = line["question"]
-            passage = line["passage"]
+            guid = "%s-%s" % (set_type, line["idx"])
+            text_a = line["question"]
+            text_b = line["passage"]
             label = line["label"]
-            examples.append(InputExample(guid=guid, text_a=question, text_b=passage, label=label))
+            examples.append(InputExample(guid=guid, text_a=text_a, text_b=text_b, label=label))
         return examples
 
 
