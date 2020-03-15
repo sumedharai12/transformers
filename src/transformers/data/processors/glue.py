@@ -196,7 +196,7 @@ class BoolqProcessor(DataProcessor):
         examples = []
         for (i, line) in enumerate(lines):
 
-            line = json.loads(line[i])
+            line = json.loads(line[0])
 
             guid = "%s-%s" % (set_type, line['idx'])
             question = line["question"]
